@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
@@ -499,8 +498,8 @@ class _NavigationMapState extends State<NavigationMap> {
       );
       const geo.LocationSettings locationSettings = geo.LocationSettings(
         accuracy: geo.LocationAccuracy.high, // Mayor precisión
-        distanceFilter:
-            5, // Actualizar solo si la posición cambia más de 5 metros
+        distanceFilter: 5,
+        // Actualizar solo si la posición cambia más de 5 metros
       );
 
       // 1. Obtener la posición inicial actual del usuario
@@ -514,6 +513,26 @@ class _NavigationMapState extends State<NavigationMap> {
       print(
         '🌟 Posición inicial obtenida: Lat ${_currentPosition!.latitude}, Lng ${_currentPosition!.longitude}',
       );
+
+      // **** CAMBIO CLAVE: Esperar a que el mapa esté listo antes de operar ****
+      // Usamos `await Future.doWhile` para esperar hasta que `_isMapReady` sea true
+      await Future.doWhile(() async {
+        await Future.delayed(
+          const Duration(milliseconds: 100),
+        ); // Pequeña espera
+        return !_isMapReady; // Continuar esperando si no está listo
+      });
+      print(
+        'DEBUG: _getCurrentLocation: _isMapReady es TRUE. Continuando con operaciones del mapa.',
+      );
+
+      // Crear/Actualizar la capa del usuario inmediatamente después de que el mapa esté listo
+      // await _updateUserLocationLayer(
+      //   _currentPosition!.latitude,
+      //   _currentPosition!.longitude,
+      //   _currentPosition!.heading,
+      // );
+      print('📍 Marcador de usuario inicial (SymbolLayer) creado.');
 
       // 3. Crear el marcador inicial del usuario (no navegando)
       // Se usa 'assets/user_marker.png' por defecto
@@ -1156,9 +1175,9 @@ class _NavigationMapState extends State<NavigationMap> {
     required bool isUserMarker,
   }) async {
     // Asegúrate de que _mapboxMapController no sea nulo antes de continuar
-    if (_mapboxMapController == null) {
+    if (_mapboxMapController == null || !_isMapReady) {
       print(
-        '❌ Error: _mapboxMapController es nulo. No se pueden crear marcadores.',
+        '❌ Error: _mapboxMapController es nulo o el mapa aún no esta listo. No se pueden crear marcadores.',
       );
       return []; // Retorna una lista vacía si el controlador no está listo
     }
