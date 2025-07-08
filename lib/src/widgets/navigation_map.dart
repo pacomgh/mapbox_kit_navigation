@@ -142,15 +142,15 @@ class _NavigationMapState extends State<NavigationMap> {
   void initState() {
     super.initState();
     mapbox.MapboxOptions.setAccessToken(widget.mapboxAccessToken);
-    _requestLocationPermission();
-    WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
-      await _getCurrentLocation();
-      // await createMarker(
-      //   assetPaTh: 'assets/user_marker.png',
-      //   lat: _currentPosition!.latitude,
-      //   lng: _currentPosition!.longitude,
-      // );
-    });
+    // _requestLocationPermission();
+    // WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
+    //   await _getCurrentLocation();
+    //   // await createMarker(
+    //   //   assetPaTh: 'assets/user_marker.png',
+    //   //   lat: _currentPosition!.latitude,
+    //   //   lng: _currentPosition!.longitude,
+    //   // );
+    // });
     _initTextToSpeech();
     _searchController.addListener(_onSearchChanged);
   }
@@ -195,21 +195,22 @@ class _NavigationMapState extends State<NavigationMap> {
                   print('DEBUG: PointAnnotationManager inicializado.');
 
                   // Si _currentPosition ya está disponible, creamos el marcador de usuario
-                  if (_currentPosition != null && userMarker == null) {
-                    await createMarker(
-                      assetPaTh: 'assets/user_marker.png',
-                      lat: _currentPosition!.latitude,
-                      lng: _currentPosition!.longitude,
-                      isUserMarker: true,
-                    );
-                    print('DEBUG: Marcador de usuario creado en onMapCreated.');
-                  }
+                  // if (_currentPosition != null && userMarker == null) {
+                  //   await createMarker(
+                  //     assetPaTh: 'assets/user_marker.png',
+                  //     lat: _currentPosition!.latitude,
+                  //     lng: _currentPosition!.longitude,
+                  //     isUserMarker: true,
+                  //   );
+                  //   print('DEBUG: Marcador de usuario creado en onMapCreated.');
+                  // }
 
                   // Una vez que el controlador y los elementos básicos están listos,
                   // marcamos el mapa como listo para mostrarse
                   setState(() {
                     _isMapReady = true;
                   });
+                  await _requestLocationPermission();
                 },
                 onStyleLoadedListener: (style) async {},
               ),
@@ -527,11 +528,11 @@ class _NavigationMapState extends State<NavigationMap> {
       );
 
       // Crear/Actualizar la capa del usuario inmediatamente después de que el mapa esté listo
-      // await _updateUserLocationLayer(
-      //   _currentPosition!.latitude,
-      //   _currentPosition!.longitude,
-      //   _currentPosition!.heading,
-      // );
+      await _updateUserLocationLayer(
+        _currentPosition!.latitude,
+        _currentPosition!.longitude,
+        _currentPosition!.heading,
+      );
       print('📍 Marcador de usuario inicial (SymbolLayer) creado.');
 
       // 3. Crear el marcador inicial del usuario (no navegando)
@@ -632,6 +633,113 @@ class _NavigationMapState extends State<NavigationMap> {
     } catch (e) {
       print('❌ Error al obtener la ubicación (try/catch principal): $e');
     }
+  }
+
+  Future<void> _updateUserLocationLayer(
+    double lat,
+    double lng,
+    double bearing,
+  ) async {
+    if (_mapboxMapController == null) return;
+
+    final String assetPath =
+        _isNavigating
+            ? 'assets/navigation_marker.png' // Nuevo marcador para navegación
+            : 'assets/user_marker.png'; // Marcador normal
+
+    // Cargar el asset de la imagen
+    final ByteData bytes = await rootBundle.load(assetPath);
+    final Uint8List list = bytes.buffer.asUint8List();
+
+    // Redimensionar la imagen a un tamaño razonable para SymbolLayer (ej. 48x48 px)
+    // Puedes usar tu función _resizeAssetImage si la implementaste, o simplemente
+    // asegura que tus assets ya están en el tamaño deseado.
+    // Pero la MEJOR FORMA es redimensionar los assets fuera de Flutter.
+
+    // El ID de la imagen en el estilo.
+    final String imageId =
+        _isNavigating ? 'assets/navigation.png' : 'assets/user_marker.png';
+
+    await createMarker(
+      assetPaTh: 'assets/user_marker.png',
+      lat: _currentPosition!.latitude,
+      lng: _currentPosition!.longitude,
+      isUserMarker: true,
+    );
+
+    // Añadir/Actualizar la imagen en el estilo del mapa
+    // try-catch para manejar el caso de que la imagen ya exista, ya que `addImage`
+    // lanzará un error si el ID de imagen ya está en uso.
+    // try {
+    //   await _mapboxMapController!.style.addImage(imageId, list);
+    //   print('✅ Imagen "$imageId" añadida/actualizada al estilo del mapa.');
+    // } catch (e) {
+    //   // Si la imagen ya existe, simplemente la ignora y continúa.
+    //   print('ℹ️ Imagen "$imageId" ya existe en el estilo del mapa. Continuar.');
+    // }
+
+    // Crea la Feature GeoJSON para el punto del usuario
+    final userFeature = mapbox.Feature(
+      id: 'user-location-feature', // ID único para la Feature del usuario
+      geometry: mapbox.Point(coordinates: mapbox.Position(lng, lat)),
+      properties: {
+        'bearing': bearing, // Pasar el rumbo para la rotación del icono
+        'asset_path':
+            assetPath, // También útil para depuración o si se usa en expresiones
+      },
+    );
+
+    final userGeoJson = jsonEncode(
+      mapbox.FeatureCollection(features: [userFeature]).toJson(),
+    );
+
+    // Estrategia: Eliminar y Añadir Fuente/Capa para la ubicación del usuario
+    // Esto asegura que la capa del usuario siempre esté encima de todas las demás si se añade al final.
+    // Y es la estrategia más robusta dada tu versión del SDK.
+    bool userLayerExists = await _mapboxMapController!.style.styleLayerExists(
+      _userLayerId,
+    );
+    bool userSourceExists = await _mapboxMapController!.style.styleSourceExists(
+      _userSourceId,
+    );
+
+    if (userLayerExists) {
+      await _mapboxMapController!.style.removeStyleLayer(_userLayerId);
+      print('🗑️ Capa de usuario removida: $_userLayerId');
+    }
+    if (userSourceExists) {
+      await _mapboxMapController!.style.removeStyleSource(_userSourceId);
+      print('🗑️ Fuente de usuario removida: $_userSourceId');
+    }
+
+    // Pequeña pausa para dar tiempo al SDK nativo a procesar la eliminación
+    await Future.delayed(Duration(milliseconds: 10));
+
+    await _mapboxMapController!.style.addSource(
+      mapbox.GeoJsonSource(id: _userSourceId, data: userGeoJson),
+    );
+    print('➕ Fuente de usuario añadida: $_userSourceId');
+
+    await _mapboxMapController!.style.addLayer(
+      mapbox.SymbolLayer(
+        id: _userLayerId,
+        sourceId: _userSourceId,
+        // Usa el ID de la imagen que añadimos al estilo
+        iconImage: imageId,
+        // Tamaño original del icono (se recomienda que el asset ya tenga el tamaño deseado)
+        iconSize: 1.0,
+        iconAllowOverlap: true, // Permitir que el icono se superponga con otros
+        // Ignorar la colocación para que siempre se vea
+        iconIgnorePlacement: true,
+        // Rotar el icono en relación con el mapa
+        iconRotationAlignment: mapbox.IconRotationAlignment.MAP,
+        // iconRotate: [
+        //   'get',
+        //   'bearing',
+        // ], // Rotar el icono según la propiedad 'bearing' del GeoJSON
+      ),
+    );
+    print('✅ Capa de ubicación de usuario actualizada con asset: $assetPath');
   }
 
   void _updateCameraPosition(mapbox.Position latLng) {
