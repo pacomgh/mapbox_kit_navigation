@@ -537,12 +537,12 @@ class _NavigationMapState extends State<NavigationMap> {
 
       // 3. Crear el marcador inicial del usuario (no navegando)
       // Se usa 'assets/user_marker.png' por defecto
-      await createMarker(
-        assetPaTh: 'assets/user_marker.png', // Marcador por defecto
-        lat: _currentPosition!.latitude,
-        lng: _currentPosition!.longitude,
-        isUserMarker: true,
-      );
+      // await createMarker(
+      //   assetPaTh: 'assets/user_marker.png', // Marcador por defecto
+      //   lat: _currentPosition!.latitude,
+      //   lng: _currentPosition!.longitude,
+      //   isUserMarker: true,
+      // );
       print('📍 Marcador de usuario inicial creado.');
 
       // 4. Mover la cámara a la posición inicial
