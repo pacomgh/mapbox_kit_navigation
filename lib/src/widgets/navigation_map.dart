@@ -19,12 +19,13 @@ import 'package:mapbox_kit_navigation/mapbox_navigation_kit.dart';
 class NavigationMap extends StatefulWidget {
   final String mapboxAccessToken;
   final bool showSearchBar;
-  final List<mapbox.Point>? predefinedRoutePoints;
+  final List<List<double>>? routeCoordinatesList;
+
   const NavigationMap({
     super.key,
     required this.mapboxAccessToken,
     this.showSearchBar = true,
-    this.predefinedRoutePoints,
+    this.routeCoordinatesList,
   });
 
   @override
@@ -634,6 +635,49 @@ class _NavigationMapState extends State<NavigationMap> {
     final String baseUrl =
         'https://api.mapbox.com/directions/v5/mapbox/driving';
 
+    List<mapbox.Point> pointsForDirectionsApi = [];
+
+    // Decidir qué puntos usar para la petición a la API de Directions
+    if (!widget.showSearchBar &&
+        widget.routeCoordinatesList != null &&
+        widget.routeCoordinatesList!.isNotEmpty) {
+      // Si no hay barra de búsqueda, usamos la lista de coordenadas obligatoria.
+      // Convertir List<List<double>> a List<mapbox.Point>
+      pointsForDirectionsApi.addAll(
+        widget.routeCoordinatesList!
+            .map(
+              (coords) => mapbox.Point(
+                coordinates: mapbox.Position(coords[0], coords[1]),
+              ),
+            )
+            .toList(),
+      );
+      print(
+        'DEBUG: Usando puntos de ruta proporcionados al constructor de la biblioteca.',
+      );
+    } else if (widget.showSearchBar && selectedPoints.isNotEmpty) {
+      // Si hay barra de búsqueda, usamos los puntos seleccionados por el usuario.
+      pointsForDirectionsApi.addAll(selectedPoints);
+      print('DEBUG: Usando puntos de ruta seleccionados por el usuario.');
+    } else {
+      // Caso de error: no hay puntos ni predefinidos ni seleccionados
+      print(
+        '🖐️ Advertencia: No hay puntos de ruta para calcular. No se pudo iniciar la navegación.',
+      );
+      _showSnackBar(
+        'No hay puntos de ruta válidos. Por favor, selecciona o proporciona puntos.',
+      );
+      _removePolyline();
+      _highestTraversedPointIndex = -1;
+      setState(() {
+        routeCoordinates.clear();
+        _routeSteps.clear();
+        _currentRouteStepIndex = 0;
+        _isNavigating = false;
+      });
+      return;
+    }
+
     selectedPoints.insert(
       0,
       mapbox.Point(
@@ -793,6 +837,7 @@ class _NavigationMapState extends State<NavigationMap> {
       routeVisualSegments.clear();
       trafficSegments.clear();
       _highestTraversedPointIndex = -1;
+      clearRouteRlatedState();
     }
   }
 
@@ -1382,6 +1427,24 @@ class _NavigationMapState extends State<NavigationMap> {
     // positionStreamSubscription?.cancel();
 
     print('✅ _stopNavigation: Navegación detenida y ruta eliminada.');
+  }
+
+  void clearRouteRlatedState() {
+    routeCoordinates.clear();
+    routeSegmentsCoordinates.clear(); //
+    _routeSteps.clear();
+    routeVisualSegments.clear();
+    trafficSegments.clear();
+    _highestTraversedPointIndex = -1;
+    _currentRouteStepIndex = 0;
+    _isNavigating = false;
+    _hasSpokenInstructionForCurrentStep = false;
+    _lastTraversedSegmentIndex = -1;
+    _lastConsumedSegmentIndex = -1;
+    // También limpiar los selectedPoints si es apropiado para tu lógica
+    selectedPoints.clear();
+    _addedLocations.clear(); // Limpiar la lista de UI también
+    _removeAllDestinationMarkers(); // Eliminar marcadores del mapa
   }
 
   // Nueva función auxiliar para eliminar todos los marcadores de destino
