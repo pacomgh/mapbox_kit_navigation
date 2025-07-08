@@ -142,6 +142,7 @@ class _NavigationMapState extends State<NavigationMap> {
   @override
   void initState() {
     super.initState();
+    mapbox.MapboxOptions.setAccessToken(widget.mapboxAccessToken);
     _requestLocationPermission();
     WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
       await _getCurrentLocation();
