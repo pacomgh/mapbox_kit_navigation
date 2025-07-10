@@ -142,7 +142,9 @@ class _NavigationMapState extends State<NavigationMap> {
   void initState() {
     super.initState();
     mapbox.MapboxOptions.setAccessToken(widget.mapboxAccessToken);
-    // _requestLocationPermission();
+    Future.delayed(Duration.zero, () async {
+      await _requestLocationPermission();
+    });
     // WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
     //   await _getCurrentLocation();
     //   // await createMarker(
