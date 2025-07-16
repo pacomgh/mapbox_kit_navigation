@@ -1,24 +1,30 @@
 name: mapbox_kit_navigation
-description: "A new Flutter package project."
+description: "A comprehensive Flutter package for Mapbox-powered navigation, offering real-time location tracking, route planning, custom markers, and turn-by-turn guidance. Designed for easy integration and a highly customizable user experience."
 version: 0.0.1
-homepage:
+homepage: https://github.com/pacomgh/mapbox_kit_navigation
+repository: https://github.com/pacomgh/mapbox_kit_navigation
+issue_tracker: https://github.com/pacomgh/mapbox_kit_navigation/issues
 
 environment:
-  sdk: ^3.7.2
-  flutter: ">=1.17.0"
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.10.0'
+# environment:
+#   sdk: ^3.7.2
+#   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
+  #cupertino_icons: ^1.0.8
   mapbox_maps_flutter: ^2.8.0
   geolocator: ^14.0.0
   permission_handler: ^12.0.0+1
   # flutter_polyline_points: ^2.1.0
   flutter_tts: ^4.2.2
   http: ^1.4.0
-  path_provider: ^2.1.5
-  share_plus: ^11.0.0
+  uuid: ^4.5.1
+  #path_provider: ^2.1.5
+  #share_plus: ^11.0.0
 
 dev_dependencies:
   flutter_test:

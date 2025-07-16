@@ -19,5 +19,5 @@ void initializeMapboxNavigationKit({required String accessToken}) {
 
   // Configurar el token de acceso de Mapbox
   mapbox.MapboxOptions.setAccessToken(accessToken);
-  print('✅ Mapbox Navigation Kit: Access Token configurado exitosamente.');
+  // print('✅ Mapbox Navigation Kit: Access Token configurado exitosamente.');
 }
