@@ -18,20 +18,20 @@ class MapboxModel {
   MapboxModel({this.routes, this.waypoints, this.code, this.uuid});
 
   factory MapboxModel.fromJson(Map<String, dynamic> json) => MapboxModel(
-    routes: List<Route>.from(json["routes"].map((x) => Route.fromJson(x))),
-    waypoints: List<Waypoint>.from(
-      json["waypoints"].map((x) => Waypoint.fromJson(x)),
-    ),
-    code: json["code"],
-    uuid: json["uuid"],
-  );
+        routes: List<Route>.from(json["routes"].map((x) => Route.fromJson(x))),
+        waypoints: List<Waypoint>.from(
+          json["waypoints"].map((x) => Waypoint.fromJson(x)),
+        ),
+        code: json["code"],
+        uuid: json["uuid"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "routes": List<dynamic>.from(routes!.map((x) => x.toJson())),
-    "waypoints": List<dynamic>.from(waypoints!.map((x) => x.toJson())),
-    "code": code,
-    "uuid": uuid,
-  };
+        "routes": List<dynamic>.from(routes!.map((x) => x.toJson())),
+        "waypoints": List<dynamic>.from(waypoints!.map((x) => x.toJson())),
+        "code": code,
+        "uuid": uuid,
+      };
 }
 
 class Route {
@@ -56,26 +56,26 @@ class Route {
   });
 
   factory Route.fromJson(Map<String, dynamic> json) => Route(
-    weightTypical: json["weight_typical"]?.toDouble(),
-    durationTypical: json["duration_typical"]?.toDouble(),
-    weightName: json["weight_name"],
-    weight: json["weight"]?.toDouble(),
-    duration: json["duration"]?.toDouble(),
-    distance: json["distance"]?.toDouble(),
-    legs: List<Leg>.from(json["legs"].map((x) => Leg.fromJson(x))),
-    geometry: Geometry.fromJson(json["geometry"]),
-  );
+        weightTypical: json["weight_typical"]?.toDouble(),
+        durationTypical: json["duration_typical"]?.toDouble(),
+        weightName: json["weight_name"],
+        weight: json["weight"]?.toDouble(),
+        duration: json["duration"]?.toDouble(),
+        distance: json["distance"]?.toDouble(),
+        legs: List<Leg>.from(json["legs"].map((x) => Leg.fromJson(x))),
+        geometry: Geometry.fromJson(json["geometry"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "weight_typical": weightTypical,
-    "duration_typical": durationTypical,
-    "weight_name": weightName,
-    "weight": weight,
-    "duration": duration,
-    "distance": distance,
-    "legs": List<dynamic>.from(legs!.map((x) => x.toJson())),
-    "geometry": geometry!.toJson(),
-  };
+        "weight_typical": weightTypical,
+        "duration_typical": durationTypical,
+        "weight_name": weightName,
+        "weight": weight,
+        "duration": duration,
+        "distance": distance,
+        "legs": List<dynamic>.from(legs!.map((x) => x.toJson())),
+        "geometry": geometry!.toJson(),
+      };
 }
 
 class Geometry {
@@ -85,20 +85,20 @@ class Geometry {
   Geometry({this.coordinates, this.type});
 
   factory Geometry.fromJson(Map<String, dynamic> json) => Geometry(
-    coordinates: List<List<double>>.from(
-      json["coordinates"].map(
-        (x) => List<double>.from(x.map((x) => x?.toDouble())),
-      ),
-    ),
-    type: typeValues.map[json["type"]]!,
-  );
+        coordinates: List<List<double>>.from(
+          json["coordinates"].map(
+            (x) => List<double>.from(x.map((x) => x?.toDouble())),
+          ),
+        ),
+        type: typeValues.map[json["type"]]!,
+      );
 
   Map<String, dynamic> toJson() => {
-    "coordinates": List<dynamic>.from(
-      coordinates!.map((x) => List<dynamic>.from(x.map((x) => x))),
-    ),
-    "type": typeValues.reverse[type],
-  };
+        "coordinates": List<dynamic>.from(
+          coordinates!.map((x) => List<dynamic>.from(x.map((x) => x))),
+        ),
+        "type": typeValues.reverse[type],
+      };
 }
 
 enum Type { LINE_STRING }
@@ -131,33 +131,32 @@ class Leg {
   });
 
   factory Leg.fromJson(Map<String, dynamic> json) => Leg(
-    viaWaypoints: List<dynamic>.from(json["via_waypoints"].map((x) => x)),
-    admins: List<Admin>.from(json["admins"].map((x) => Admin.fromJson(x))),
-    annotation:
-        json["annotation"] != null
+        viaWaypoints: List<dynamic>.from(json["via_waypoints"].map((x) => x)),
+        admins: List<Admin>.from(json["admins"].map((x) => Admin.fromJson(x))),
+        annotation: json["annotation"] != null
             ? Annotation.fromJson(json["annotation"])
             : null,
-    weightTypical: json["weight_typical"]?.toDouble(),
-    durationTypical: json["duration_typical"]?.toDouble(),
-    weight: json["weight"]?.toDouble(),
-    duration: json["duration"]?.toDouble(),
-    steps: List<Step>.from(json["steps"].map((x) => Step.fromJson(x))),
-    distance: json["distance"]?.toDouble(),
-    summary: json["summary"],
-  );
+        weightTypical: json["weight_typical"]?.toDouble(),
+        durationTypical: json["duration_typical"]?.toDouble(),
+        weight: json["weight"]?.toDouble(),
+        duration: json["duration"]?.toDouble(),
+        steps: List<Step>.from(json["steps"].map((x) => Step.fromJson(x))),
+        distance: json["distance"]?.toDouble(),
+        summary: json["summary"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "via_waypoints": List<dynamic>.from(viaWaypoints!.map((x) => x)),
-    "admins": List<dynamic>.from(admins!.map((x) => x.toJson())),
-    "annotation": annotation?.toJson(),
-    "weight_typical": weightTypical,
-    "duration_typical": durationTypical,
-    "weight": weight,
-    "duration": duration,
-    "steps": List<dynamic>.from(steps!.map((x) => x.toJson())),
-    "distance": distance,
-    "summary": summary,
-  };
+        "via_waypoints": List<dynamic>.from(viaWaypoints!.map((x) => x)),
+        "admins": List<dynamic>.from(admins!.map((x) => x.toJson())),
+        "annotation": annotation?.toJson(),
+        "weight_typical": weightTypical,
+        "duration_typical": durationTypical,
+        "weight": weight,
+        "duration": duration,
+        "steps": List<dynamic>.from(steps!.map((x) => x.toJson())),
+        "distance": distance,
+        "summary": summary,
+      };
 }
 
 class Admin {
@@ -167,14 +166,14 @@ class Admin {
   Admin({this.iso31661Alpha3, this.iso31661});
 
   factory Admin.fromJson(Map<String, dynamic> json) => Admin(
-    iso31661Alpha3: json["iso_3166_1_alpha3"],
-    iso31661: json["iso_3166_1"],
-  );
+        iso31661Alpha3: json["iso_3166_1_alpha3"],
+        iso31661: json["iso_3166_1"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "iso_3166_1_alpha3": iso31661Alpha3,
-    "iso_3166_1": iso31661,
-  };
+        "iso_3166_1_alpha3": iso31661Alpha3,
+        "iso_3166_1": iso31661,
+      };
 }
 
 class Annotation {
@@ -183,16 +182,16 @@ class Annotation {
   Annotation({this.congestion});
 
   factory Annotation.fromJson(Map<String, dynamic> json) => Annotation(
-    congestion: List<Congestion>.from(
-      json["congestion"].map((x) => congestionValues.map[x]!),
-    ),
-  );
+        congestion: List<Congestion>.from(
+          json["congestion"].map((x) => congestionValues.map[x]!),
+        ),
+      );
 
   Map<String, dynamic> toJson() => {
-    "congestion": List<dynamic>.from(
-      congestion!.map((x) => congestionValues.reverse[x]),
-    ),
-  };
+        "congestion": List<dynamic>.from(
+          congestion!.map((x) => congestionValues.reverse[x]),
+        ),
+      };
 }
 
 enum Congestion { LOW, UNKNOWN, MODERATE, SEVERE, HEAVY }
@@ -235,36 +234,37 @@ class Step {
   });
 
   factory Step.fromJson(Map<String, dynamic> json) => Step(
-    intersections: List<Intersection>.from(
-      json["intersections"].map((x) => Intersection.fromJson(x)),
-    ),
-    maneuver: Maneuver.fromJson(json["maneuver"]),
-    name: json["name"],
-    weightTypical: json["weight_typical"]?.toDouble(),
-    durationTypical: json["duration_typical"]?.toDouble(),
-    duration: json["duration"]?.toDouble(),
-    distance: json["distance"]?.toDouble(),
-    drivingSide: drivingSideValues.map[json["driving_side"]]!,
-    weight: json["weight"]?.toDouble(),
-    mode: modeValues.map[json["mode"]]!,
-    geometry: Geometry.fromJson(json["geometry"]),
-    destinations: json["destinations"],
-  );
+        intersections: List<Intersection>.from(
+          json["intersections"].map((x) => Intersection.fromJson(x)),
+        ),
+        maneuver: Maneuver.fromJson(json["maneuver"]),
+        name: json["name"],
+        weightTypical: json["weight_typical"]?.toDouble(),
+        durationTypical: json["duration_typical"]?.toDouble(),
+        duration: json["duration"]?.toDouble(),
+        distance: json["distance"]?.toDouble(),
+        drivingSide: drivingSideValues.map[json["driving_side"]]!,
+        weight: json["weight"]?.toDouble(),
+        mode: modeValues.map[json["mode"]]!,
+        geometry: Geometry.fromJson(json["geometry"]),
+        destinations: json["destinations"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "intersections": List<dynamic>.from(intersections!.map((x) => x.toJson())),
-    "maneuver": maneuver!.toJson(),
-    "name": name,
-    "weight_typical": weightTypical,
-    "duration_typical": durationTypical,
-    "duration": duration,
-    "distance": distance,
-    "driving_side": drivingSideValues.reverse[drivingSide],
-    "weight": weight,
-    "mode": modeValues.reverse[mode],
-    "geometry": geometry!.toJson(),
-    "destinations": destinations,
-  };
+        "intersections":
+            List<dynamic>.from(intersections!.map((x) => x.toJson())),
+        "maneuver": maneuver!.toJson(),
+        "name": name,
+        "weight_typical": weightTypical,
+        "duration_typical": durationTypical,
+        "duration": duration,
+        "distance": distance,
+        "driving_side": drivingSideValues.reverse[drivingSide],
+        "weight": weight,
+        "mode": modeValues.reverse[mode],
+        "geometry": geometry!.toJson(),
+        "destinations": destinations,
+      };
 }
 
 enum DrivingSide { LEFT, RIGHT, STRAIGHT }
@@ -311,47 +311,46 @@ class Intersection {
   });
 
   factory Intersection.fromJson(Map<String, dynamic> json) => Intersection(
-    entry: List<bool>.from(json["entry"].map((x) => x)),
-    bearings: List<int>.from(json["bearings"].map((x) => x)),
-    duration: json["duration"]?.toDouble(),
-    mapboxStreetsV8:
-        json["mapbox_streets_v8"] == null
+        entry: List<bool>.from(json["entry"].map((x) => x)),
+        bearings: List<int>.from(json["bearings"].map((x) => x)),
+        duration: json["duration"]?.toDouble(),
+        mapboxStreetsV8: json["mapbox_streets_v8"] == null
             ? null
             : MapboxStreetsV8.fromJson(json["mapbox_streets_v8"]),
-    isUrban: json["is_urban"],
-    adminIndex: json["admin_index"],
-    out: json["out"],
-    weight: json["weight"]?.toDouble(),
-    geometryIndex: json["geometry_index"],
-    location: List<double>.from(json["location"].map((x) => x?.toDouble())),
-    intersectionIn: json["in"],
-    turnWeight: json["turn_weight"]?.toDouble(),
-    turnDuration: json["turn_duration"]?.toDouble(),
-    trafficSignal: json["traffic_signal"],
-    lanes:
-        json["lanes"] == null
+        isUrban: json["is_urban"],
+        adminIndex: json["admin_index"],
+        out: json["out"],
+        weight: json["weight"]?.toDouble(),
+        geometryIndex: json["geometry_index"],
+        location: List<double>.from(json["location"].map((x) => x?.toDouble())),
+        intersectionIn: json["in"],
+        turnWeight: json["turn_weight"]?.toDouble(),
+        turnDuration: json["turn_duration"]?.toDouble(),
+        trafficSignal: json["traffic_signal"],
+        lanes: json["lanes"] == null
             ? []
             : List<Lane>.from(json["lanes"]!.map((x) => Lane.fromJson(x))),
-  );
+      );
 
   Map<String, dynamic> toJson() => {
-    "entry": List<dynamic>.from(entry!.map((x) => x)),
-    "bearings": List<dynamic>.from(bearings!.map((x) => x)),
-    "duration": duration,
-    "mapbox_streets_v8": mapboxStreetsV8?.toJson(),
-    "is_urban": isUrban,
-    "admin_index": adminIndex,
-    "out": out,
-    "weight": weight,
-    "geometry_index": geometryIndex,
-    "location": List<dynamic>.from(location!.map((x) => x)),
-    "in": intersectionIn,
-    "turn_weight": turnWeight,
-    "turn_duration": turnDuration,
-    "traffic_signal": trafficSignal,
-    "lanes":
-        lanes == null ? [] : List<dynamic>.from(lanes!.map((x) => x.toJson())),
-  };
+        "entry": List<dynamic>.from(entry!.map((x) => x)),
+        "bearings": List<dynamic>.from(bearings!.map((x) => x)),
+        "duration": duration,
+        "mapbox_streets_v8": mapboxStreetsV8?.toJson(),
+        "is_urban": isUrban,
+        "admin_index": adminIndex,
+        "out": out,
+        "weight": weight,
+        "geometry_index": geometryIndex,
+        "location": List<dynamic>.from(location!.map((x) => x)),
+        "in": intersectionIn,
+        "turn_weight": turnWeight,
+        "turn_duration": turnDuration,
+        "traffic_signal": trafficSignal,
+        "lanes": lanes == null
+            ? []
+            : List<dynamic>.from(lanes!.map((x) => x.toJson())),
+      };
 }
 
 class Lane {
@@ -363,28 +362,26 @@ class Lane {
   Lane({this.indications, this.validIndication, this.valid, this.active});
 
   factory Lane.fromJson(Map<String, dynamic> json) => Lane(
-    indications:
-        json["indications"] != null
+        indications: json["indications"] != null
             ? List<DrivingSide>.from(
-              json["indications"].map((x) => drivingSideValues.map[x]!),
-            )
+                json["indications"].map((x) => drivingSideValues.map[x]!),
+              )
             : [],
-    validIndication:
-        json["valid_indication"] != null
+        validIndication: json["valid_indication"] != null
             ? drivingSideValues.map[json["valid_indication"]]!
             : null,
-    valid: json["valid"],
-    active: json["active"],
-  );
+        valid: json["valid"],
+        active: json["active"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "indications": List<dynamic>.from(
-      indications!.map((x) => drivingSideValues.reverse[x]),
-    ),
-    "valid_indication": drivingSideValues.reverse[validIndication],
-    "valid": valid,
-    "active": active,
-  };
+        "indications": List<dynamic>.from(
+          indications!.map((x) => drivingSideValues.reverse[x]),
+        ),
+        "valid_indication": drivingSideValues.reverse[validIndication],
+        "valid": valid,
+        "active": active,
+      };
 }
 
 class MapboxStreetsV8 {
@@ -396,8 +393,8 @@ class MapboxStreetsV8 {
       MapboxStreetsV8(mapboxStreetsV8Class: classValues.map[json["class"]]!);
 
   Map<String, dynamic> toJson() => {
-    "class": classValues.reverse[mapboxStreetsV8Class],
-  };
+        "class": classValues.reverse[mapboxStreetsV8Class],
+      };
 }
 
 enum Class {
@@ -409,6 +406,7 @@ enum Class {
   STREET,
   TERTIARY,
   TERTIARY_LINK,
+  STREET_LIMITED
 }
 
 final classValues = EnumValues({
@@ -420,6 +418,7 @@ final classValues = EnumValues({
   "street": Class.STREET,
   "tertiary": Class.TERTIARY,
   "tertiary_link": Class.TERTIARY_LINK,
+  "street_limited": Class.STREET_LIMITED,
 });
 
 class Maneuver {
@@ -442,25 +441,26 @@ class Maneuver {
   });
 
   factory Maneuver.fromJson(Map<String, dynamic> json) => Maneuver(
-    type: json["type"],
-    instruction: json["instruction"],
-    bearingAfter: json["bearing_after"],
-    bearingBefore: json["bearing_before"],
-    location: List<double>.from(json["location"].map((x) => x?.toDouble())),
-    modifier:
-        json["modifier"] != null ? modifierValues.map[json["modifier"]] : null,
-    exit: json["exit"],
-  );
+        type: json["type"],
+        instruction: json["instruction"],
+        bearingAfter: json["bearing_after"],
+        bearingBefore: json["bearing_before"],
+        location: List<double>.from(json["location"].map((x) => x?.toDouble())),
+        modifier: json["modifier"] != null
+            ? modifierValues.map[json["modifier"]]
+            : null,
+        exit: json["exit"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "type": type,
-    "instruction": instruction,
-    "bearing_after": bearingAfter,
-    "bearing_before": bearingBefore,
-    "location": List<dynamic>.from(location!.map((x) => x)),
-    "modifier": modifierValues.reverse[modifier],
-    "exit": exit,
-  };
+        "type": type,
+        "instruction": instruction,
+        "bearing_after": bearingAfter,
+        "bearing_before": bearingBefore,
+        "location": List<dynamic>.from(location!.map((x) => x)),
+        "modifier": modifierValues.reverse[modifier],
+        "exit": exit,
+      };
 }
 
 enum Modifier { LEFT, RIGHT, SLIGHT_LEFT, SLIGHT_RIGHT, UTURN }
@@ -486,22 +486,22 @@ class Waypoint {
   Waypoint({this.timeZone, this.distance, this.name, this.location});
 
   factory Waypoint.fromJson(Map<String, dynamic> json) => Waypoint(
-    timeZone:
-        json["time_zone"] != null ? TimeZone.fromJson(json["time_zone"]) : null,
-    distance: json["distance"]?.toDouble(),
-    name: json["name"],
-    location:
-        json["location"] != null
+        timeZone: json["time_zone"] != null
+            ? TimeZone.fromJson(json["time_zone"])
+            : null,
+        distance: json["distance"]?.toDouble(),
+        name: json["name"],
+        location: json["location"] != null
             ? List<double>.from(json["location"].map((x) => x?.toDouble()))
             : null,
-  );
+      );
 
   Map<String, dynamic> toJson() => {
-    "time_zone": timeZone?.toJson(),
-    "distance": distance,
-    "name": name,
-    "location": List<dynamic>.from(location!.map((x) => x)),
-  };
+        "time_zone": timeZone?.toJson(),
+        "distance": distance,
+        "name": name,
+        "location": List<dynamic>.from(location!.map((x) => x)),
+      };
 }
 
 class TimeZone {
@@ -516,16 +516,16 @@ class TimeZone {
   });
 
   factory TimeZone.fromJson(Map<String, dynamic> json) => TimeZone(
-    abbreviation: json["abbreviation"],
-    identifier: json["identifier"],
-    offset: json["offset"],
-  );
+        abbreviation: json["abbreviation"],
+        identifier: json["identifier"],
+        offset: json["offset"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "abbreviation": abbreviation,
-    "identifier": identifier,
-    "offset": offset,
-  };
+        "abbreviation": abbreviation,
+        "identifier": identifier,
+        "offset": offset,
+      };
 }
 
 class EnumValues<T> {
