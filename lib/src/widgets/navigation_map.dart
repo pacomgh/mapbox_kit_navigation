@@ -154,7 +154,11 @@ class _NavigationMapState extends State<NavigationMap> {
                       _isMapReady = true;
 
                       await _mapboxMapController!.location.updateSettings(
-                        mapbox.LocationComponentSettings(enabled: false),
+                        mapbox.LocationComponentSettings(
+                          enabled: true,
+                          pulsingEnabled: true,
+                          showAccuracyRing: true,
+                        ),
                       );
 
                       await _addImageToStyle(
